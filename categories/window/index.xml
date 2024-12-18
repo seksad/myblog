@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Window on SUHUI</title><link>https://blog.suhui.us.kg/categories/window/</link><description>Recent content in Window on SUHUI</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 20 Nov 2024 21:02:40 +0000</lastBuildDate><atom:link href="https://blog.suhui.us.kg/categories/window/index.xml" rel="self" type="application/rss+xml"/><item><title>Windows配置debian虚拟机以及Xshell连接</title><link>https://blog.suhui.us.kg/p/windows%E9%85%8D%E7%BD%AEdebian%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%BB%A5%E5%8F%8Axshell%E8%BF%9E%E6%8E%A5/</link><pubDate>Wed, 20 Nov 2024 21:02:40 +0000</pubDate><guid>https://blog.suhui.us.kg/p/windows%E9%85%8D%E7%BD%AEdebian%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%BB%A5%E5%8F%8Axshell%E8%BF%9E%E6%8E%A5/</guid><description>&lt;h1 id="windows-配置-debian虚拟机及xshell连接">Windows 配置 Debian虚拟机及Xshell连接
+&lt;/h1>&lt;h2 id="vmware">VMware
+&lt;/h2>&lt;h3 id="1下载">1.下载
+&lt;/h3>&lt;p>    1. 前往官网下载最新版本：https://www.vmware.com/ 由于小编也没找到所以没法给路径&lt;/p>
+&lt;p>    2. 使用网盘里的库存： http://47.97.115.73:5244/d/%E7%BD%91%E7%9B%98%E8%B5%84%E6%BA%90/VMware-workstation-full-17.5.2-23775571.exe?sign=H3kDu7HVdj5Ael3csoRl2oAdpegT-UrBLnGJXvnE9Gg=:0&lt;/p>
+&lt;h3 id="2安装">2.安装
+&lt;/h3>&lt;p>    这里提供一篇社区大佬做的教程：&lt;a class="link" href="https://blog.csdn.net/weixin_69052332/article/details/141745665" target="_blank" rel="noopener"
+>如何在Windows电脑上安装Linux虚拟机，以及Linux基本命令_windows安装linux虚拟机-CSDN博客&lt;/a>&lt;/p>
+&lt;p>    1.点击下一步
+    2.点击左下角的&amp;lt;接收许可&amp;gt; ，然后点击下一步
+    3.点击右上角的&amp;lt;更改&amp;gt;，点击中上白色框选择安装到的盘，新建文件夹VMware，点击确定
+    4.勾选的不重要，点击下一步
+    5.点击下一步
+    6.点击下一步
+    7.点击 安装 并等待，中间可能会出现一些异象，但是不重要
+    8.点击完成
+    9.出现弹窗 提示要重启，确认无误后重启。&lt;/p>
+&lt;h3 id="3启动vmware">3.启动VMware
+&lt;/h3>&lt;p>    打开桌面创建的快捷方式
+    如果遇到激活的问题，可以&lt;u>&lt;a class="link" href="http://47.97.115.73:5244/d/%E7%BD%91%E7%9B%98%E8%B5%84%E6%BA%90/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%AF%86%E9%92%A5.txt?sign=z_uTeNdr3W0No-FlwxEU-13cDX70kbBh8Api0Y9jBF4=:0" target="_blank" rel="noopener"
+>前往此处&lt;/a>&lt;/u> 获取激活码&lt;/p>
+&lt;h3 id="4安装虚拟机">4.安装虚拟机
+&lt;/h3>&lt;p>    本次使用的系统是debian系统，映像文件&lt;u>&lt;a class="link" href="http://47.97.115.73:5244/d/%E7%BD%91%E7%9B%98%E8%B5%84%E6%BA%90/debian-12.7.0-amd64-netinst.iso?sign=PwAFNMKyF8dxcL1DljyOiMXzxv6Gj6HYTg2ph4HpK-k=:0" target="_blank" rel="noopener"
+>点击此处&lt;/a>&lt;/u>获取
+    1.打开VMware，点击右侧的&amp;lt;创建新的虚拟机&amp;gt;，选择&amp;lt;典型&amp;gt;，然后点击下一步
+    2.看到中间那一栏，若已自动选中则跳过这一步，直接点击下一步即可。
+            点击&amp;lt;浏览&amp;gt;，选中要安装的映像文件，点击下一步
+    3. 第一栏中，命名自己的虚拟机名字；第二栏中选择安装的位置。都配置好后点击下一步
+    4. 默认即可，点击下一步
+    5.勾选&amp;lt;创建后开启此虚拟机&amp;gt;，点击完成。&lt;/p>
+&lt;h2 id="debian">Debian
+&lt;/h2>&lt;h3 id="按如下操作走">按如下操作走：
+&lt;/h3>&lt;ol>
+&lt;li>
+&lt;p>通过↑↓键，选中graphic install，然后回车&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选择中文(简体)，点击continue&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选择中国，点击 继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选择汉语，点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>等待加载&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>命名主机名称&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>域名不管，直接回车即可&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>设置自己的管理员密码&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>命名一个非管理员账户&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>设置非管理员账户密码&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>等待加载&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选择&amp;lt;向导-使用整个磁盘&amp;gt;，点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>这里是选择的磁盘，由于是单独分出来的一块，直接点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>不用管文件分区，点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击继续即可&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选&amp;lt;是&amp;gt;，然后点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选&amp;lt;否&amp;gt;，然后点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>等待加载&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选择中国，点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>若在安徽地区，则选择&amp;lt;mirrors.ustc.edu.cn&amp;gt;这是中科大的镜像站点；若不在其周边，则选择&amp;lt;mirrors,163.com&amp;gt;这是网易的站点&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>http代理留空即可，点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>等待加载&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选择&amp;lt;否&amp;gt;，点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在软件选择界面，去掉Debian桌面环境选项，因为这是虚拟机，用桌面会很卡并造成不必要的负担，然后点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>等待加载&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选择&amp;lt;否&amp;gt;，点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击继续，再点击继续即可&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>安装完成，点击继续&lt;/p>
+&lt;/li>
+&lt;/ol></description></item><item><title>Windows配置go语言</title><link>https://blog.suhui.us.kg/p/windows%E9%85%8D%E7%BD%AEgo%E8%AF%AD%E8%A8%80/</link><pubDate>Wed, 20 Nov 2024 18:02:40 +0000</pubDate><guid>https://blog.suhui.us.kg/p/windows%E9%85%8D%E7%BD%AEgo%E8%AF%AD%E8%A8%80/</guid><description>&lt;h1 id="windows-配置go环境">Windows 配置go环境
+&lt;/h1>&lt;h5 id="本笔记参考于csdn上一篇教程ua-hrefhttpsblogcsdnnetxuezhe5212articledetails139327521点击次处au查看原教程">本笔记参考于CSDN上一篇教程，&lt;u>&lt;a href="https://blog.csdn.net/xuezhe5212/article/details/139327521">点击次处&lt;/a>&lt;/u>查看原教程
+&lt;/h5>&lt;h2 id="1go的下载">1.go的下载
+&lt;/h2>&lt;p>官网下载：https://golang.google.cn/ &lt;u>&lt;a class="link" href="https://golang.google.cn/dl/go1.23.3.windows-amd64.msi" target="_blank" rel="noopener"
+>点击此处&lt;/a>&lt;/u>下载&lt;/p>
+&lt;p>    &lt;em>如果嫌慢的话也可以尝试下面这个&lt;/em>&lt;/p>
+&lt;p>Alist云端下载：&lt;u>&lt;a class="link" href="http://47.97.115.73:5244/%E7%BD%91%E7%9B%98%E8%B5%84%E6%BA%90/go1.23.3.windows-amd64.msi" target="_blank" rel="noopener"
+>点击此处&lt;/a>&lt;/u>跳转&lt;/p>
+&lt;h2 id="2go的安装">2.go的安装
+&lt;/h2>&lt;ol>
+&lt;li>
+&lt;p>双击.msi文件打开&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击next&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击next&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>设置自己喜欢的路径后，点击next&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击install&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>这个时候后弹出来一个窗口，询问是否安装，此时点击 是 即可&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击finish&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="3检查go的文件">3.检查go的文件
+&lt;/h2>&lt;p>    此时进入刚刚安装的go的根目录，核对以下文件&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">api
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">bin
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">doc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lib
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">misc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pkg
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">src
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">test
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">codereview.cfg
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">CONTRIBUTING.md
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">go.env
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">LICENSE
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PATENTS
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">README.md
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">SECURITY.md
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">VERSION
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>    核对后，进入bin文件夹，打开go.exe进入go编译器，若能正常运行进入下一步&lt;/p>
+&lt;h2 id="4配置go环境">4.配置go环境
+&lt;/h2>&lt;ol>
+&lt;li>
+&lt;p>在设置中找到&amp;lt;环境变量&amp;gt;(不同版本系统位置不同，紧粗略说明)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>进入&amp;lt;系统属性&amp;gt;后，点击右下角&amp;lt;环境变量&amp;gt;&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在下方的&amp;lt;系统变量&amp;gt;中找到&amp;lt;Path变量&amp;gt;，双击打开&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在列表中查看，若没有出现&amp;lt;\go\bin&amp;gt;格式的路径，则进行第五步，有则跳过&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>找到安装的go的bin文件夹，复制改路径，回到&amp;lt;编辑环境变量&amp;gt;界面，点击右上角的&amp;lt;新建&amp;gt;，粘贴路径，点击右下角&amp;lt;确定&amp;gt;即可&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="5转移文件安放位置选做">5.转移文件安放位置(选做)
+&lt;/h2>&lt;p>    若不想在go的根目录下存储代码的话，可以根据如下操作：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>在想存储代码的地方创建一个文件夹(不包含非法字符和中文)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在此文件夹中再创建3个文件夹，名称及功能如下：
+bin : 可执行文件存储位置
+pkg：生成的包文件的位置
+src : 项目的位置&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>修改环境变量：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>打开&amp;lt;环境变量&amp;gt;,找到上方的&amp;lt;用户变量&amp;gt;中的&lt;GOPATH>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>双击打开，复制之前创建的文件夹位置并粘贴替换到下面那一行的路径(变量值)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>找到&lt;GOROOT>，若无则新建一个即可，变量值为go的根目录&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>找到&lt;GOBIN>若无则创建，变量值为创建的文件夹下的bin地址&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>
+&lt;p>测试：
+在cmd下运行
+&lt;code> go run app.go&lt;/code>
+若成功运行则完成安装&lt;/p>
+&lt;/li>
+&lt;/ol></description></item></channel></rss>

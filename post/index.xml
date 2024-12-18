@@ -1,0 +1,1106 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on SUHUI</title><link>https://blog.suhui.us.kg/post/</link><description>Recent content in Posts on SUHUI</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 17 Dec 2024 23:42:40 +0000</lastBuildDate><atom:link href="https://blog.suhui.us.kg/post/index.xml" rel="self" type="application/rss+xml"/><item><title>grafana+prometheus简单监控</title><link>https://blog.suhui.us.kg/p/grafana-prometheus%E7%AE%80%E5%8D%95%E7%9B%91%E6%8E%A7/</link><pubDate>Tue, 17 Dec 2024 23:42:40 +0000</pubDate><guid>https://blog.suhui.us.kg/p/grafana-prometheus%E7%AE%80%E5%8D%95%E7%9B%91%E6%8E%A7/</guid><description>&lt;h1 id="安装prometheus">安装prometheus
+&lt;/h1>&lt;p>创建&lt;code>/opt/prometheus/config&lt;/code>和&lt;code>/opt/prometheus/data&lt;/code>文件夹。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">mkdir /opt/prometheus/config
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mkdir /opt/prometheus/data
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>将下面2个文件，&lt;code>prometheus.yml&lt;/code>和&lt;code>alert.rules.yml&lt;/code>放到&lt;code>.config&lt;/code>文件夹下面。&lt;/p>
+&lt;p>这是&lt;code>prometheus.yml&lt;/code>内容&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-prometheus.yml" data-lang="prometheus.yml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">global&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">scrape_interval&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">15s&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">rule_files&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">/etc/prometheus/alert.rules.yml&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">scrape_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">job_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;prometheus&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">static_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">targets&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;localhost:9090&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">alerting&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">alertmanagers&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">static_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">targets&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;alertmanager:9093&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>这是&lt;code>alert.rules.yml&lt;/code>内容&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-alert.rules.yml" data-lang="alert.rules.yml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">groups&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">example&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">rules&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">alert&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">InstanceDown&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">expr&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">up == 0&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">for&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">5m&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">severity&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">page&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">annotations&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">summary&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;Instance {{$labels.instance}} down&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">description&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;{{$labels.instance}} of job {{$labels.job}} has been down for more than 5 minutes.&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后，运行prometheus&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">docker run -d --name prometheus &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>--restart&lt;span class="o">=&lt;/span>unless-stopped &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>--privileged&lt;span class="o">=&lt;/span>&lt;span class="nb">true&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-u root &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-p 9090:9090 &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-v /opt/prometheus//config:/etc/prometheus &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-v /opt/prometheus//data:/prometheus &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>prom/prometheus:latest
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>此时，访问&lt;code>ip:9090&lt;/code>可以看到prometheus的网页&lt;/p>
+&lt;h2 id="安装node-exporter收集主机数据">安装node-exporter(收集主机数据)
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">docker run -d &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>--name node-exporter &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>--restart&lt;span class="o">=&lt;/span>unless-stopped &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-p 9100:9100 &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-v &lt;span class="s2">&amp;#34;/proc:/host/proc:ro&amp;#34;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-v &lt;span class="s2">&amp;#34;/sys:/host/sys:ro&amp;#34;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-v &lt;span class="s2">&amp;#34;/:/rootfs:ro&amp;#34;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>prom/node-exporter:latest
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>访问&lt;code>http://ip:9100/metrics&lt;/code>，即可看到监控的主机数据&lt;/p>
+&lt;p>将&lt;code>node-exporter&lt;/code>与&lt;code>prometheus&lt;/code>添加到同一网络，然后修改&lt;code>prometheus.yml&lt;/code>,改为如下&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-prometheus.yml" data-lang="prometheus.yml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">global&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">scrape_interval&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">15s&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">rule_files&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">/etc/prometheus/alert.rules.yml&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">scrape_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">job_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;prometheus&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">static_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">targets&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;localhost:9090&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">job_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">linux&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">static_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">targets&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;node-exporter:9100&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">instance&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">localhost&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># - targets: [&amp;#39;192.168.1.22:9100&amp;#39;] &lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c">#这里添加targets，可以使用Prometheus监控其他装有node_exporter的节点，单节点则不需要&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># labels:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># instance: 192.168.1.22&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">alerting&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">alertmanagers&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">static_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">targets&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;alertmanager:9093&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="安装-mysqld-exporter收集主机数据">安装 mysqld-exporter(收集主机数据)
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">docker run -d &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>--name mysqld_exporter &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>--restart&lt;span class="o">=&lt;/span>unless-stopped &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-p 9104:9104 &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-e &lt;span class="nv">DATA_SOURCE_NAME&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;root:Password123@(172.17.0.2:3306)/&amp;#34;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>prom/mysqld-exporter:latest
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>访问&lt;code>http://ip:9104/metrics&lt;/code>，即可看到监控的主机数据&lt;/p>
+&lt;p>将&lt;code>mysqld-exporter&lt;/code>与&lt;code>prometheus&lt;/code>添加到同一网络，然后修改&lt;code>prometheus.yml&lt;/code>,改为如下&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-prometheus.yml" data-lang="prometheus.yml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">global&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">scrape_interval&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">15s&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">rule_files&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">/etc/prometheus/alert.rules.yml&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">scrape_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">job_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;prometheus&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">static_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">targets&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;localhost:9090&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">job_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">linux&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">static_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">targets&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;node-exporter:9100&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">instance&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">localhost&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># - targets: [&amp;#39;192.168.1.22:9100&amp;#39;] &lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c">#这里添加targets，可以使用Prometheus监控其他装有node_exporter的节点，单节点则不需要&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># labels:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># instance: 192.168.1.22&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">job_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">mysqld&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">static_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">targets&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;172.17.0.3:9104&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">instance&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">mysql-exporter&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">alerting&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">alertmanagers&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">static_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">targets&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;alertmanager:9093&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="安装cadvisor收集容器数据">安装cadvisor(收集容器数据)
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">docker run &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-v /:/rootfs:ro &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-v /var/run:/var/run:ro &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-v /sys:/sys:ro &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-v /var/lib/docker/:/var/lib/docker:ro &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-v /dev/disk/:/dev/disk:ro &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-p 8080:8080 &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-d --name&lt;span class="o">=&lt;/span>cadvisor &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>--privileged &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>--restart&lt;span class="o">=&lt;/span>unless-stopped &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>google/cadvisor:latest
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>访问&lt;code>http://ip:8080/metrics&lt;/code>，即可看到监控的容器的数据&lt;/p>
+&lt;p>将&lt;code>cadvisor&lt;/code>与&lt;code>prometheus&lt;/code>添加到同一网络，然后修改&lt;code>prometheus.yml&lt;/code>,改为如下&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-prometheus.yml" data-lang="prometheus.yml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">global&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">scrape_interval&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">15s&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">rule_files&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">/etc/prometheus/alert.rules.yml&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">scrape_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">job_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;prometheus&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">static_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">targets&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;localhost:9090&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">job_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">linux&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">static_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">targets&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;node-exporter:9100&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">instance&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">localhost&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># - targets: [&amp;#39;192.168.1.22:9100&amp;#39;] &lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c">#这里添加targets，可以使用Prometheus监控其他装有node_exporter的节点，单节点则不需要&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># labels:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># instance: 192.168.1.22&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">job_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">mysqld&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">static_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">targets&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;172.17.0.3:9104&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">instance&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">mysql-exporter&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">job_name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">cadvisor&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">static_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">targets&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;cadvisor:8080&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">labels&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">instance&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">cAdvisor&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">alerting&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">alertmanagers&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">static_configs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">targets&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;alertmanager:9093&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h1 id="安装grafana">安装grafana
+&lt;/h1>&lt;p>创建目录&lt;code>/opt/grafana/&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">mkdir /opt/grafana
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后启动grafana&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">docker run -d &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-p 3000:3000 &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>--name grafana &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-v /opt/grafana/data:/var/lib/grafana &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-v /etc/localtime:/etc/localtime &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>grafana/grafana:latest
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>然后访问&lt;code>http://ip:3000&lt;/code>进入grafana，&lt;/p>
+&lt;p>pass&lt;/p>
+&lt;h3 id="添加数据源-选择prometheus">添加数据源-&amp;gt;选择prometheus
+&lt;/h3>&lt;h3 id="导入面板">导入面板
+&lt;/h3>&lt;p>输入id&lt;/p>
+&lt;p>12633&lt;/p>
+&lt;p>8919&lt;/p>
+&lt;p>更多grafana模板: &lt;a class="link" href="https://grafana.com/grafana/dashboards" target="_blank" rel="noopener"
+>https://grafana.com/grafana/dashboards&lt;/a> 搜索 相应 dashboards的id如&lt;strong>8919，12227&lt;/strong>&lt;/p></description></item><item><title>搭建rpg小游戏 browserquest</title><link>https://blog.suhui.us.kg/p/%E6%90%AD%E5%BB%BArpg%E5%B0%8F%E6%B8%B8%E6%88%8F-browserquest/</link><pubDate>Thu, 21 Nov 2024 20:02:40 +0000</pubDate><guid>https://blog.suhui.us.kg/p/%E6%90%AD%E5%BB%BArpg%E5%B0%8F%E6%B8%B8%E6%88%8F-browserquest/</guid><description>&lt;h2 id="搭建rpg小游戏-browserquest">搭建rpg小游戏 browserquest
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">docker run -d &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-p 8000:8000 &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-p 8787:8787 &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>--name rpg &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>-e &lt;span class="nv">HOST_IP&lt;/span>&lt;span class="o">=&lt;/span>your-ip &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span>registry.cn-guangzhou.aliyuncs.com/welldene/games:rpg_game
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>浏览器输入&lt;code>your-ip:8787&lt;/code>&lt;/p></description></item><item><title>Windows配置debian虚拟机以及Xshell连接</title><link>https://blog.suhui.us.kg/p/windows%E9%85%8D%E7%BD%AEdebian%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%BB%A5%E5%8F%8Axshell%E8%BF%9E%E6%8E%A5/</link><pubDate>Wed, 20 Nov 2024 21:02:40 +0000</pubDate><guid>https://blog.suhui.us.kg/p/windows%E9%85%8D%E7%BD%AEdebian%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%BB%A5%E5%8F%8Axshell%E8%BF%9E%E6%8E%A5/</guid><description>&lt;h1 id="windows-配置-debian虚拟机及xshell连接">Windows 配置 Debian虚拟机及Xshell连接
+&lt;/h1>&lt;h2 id="vmware">VMware
+&lt;/h2>&lt;h3 id="1下载">1.下载
+&lt;/h3>&lt;p>    1. 前往官网下载最新版本：https://www.vmware.com/ 由于小编也没找到所以没法给路径&lt;/p>
+&lt;p>    2. 使用网盘里的库存： http://47.97.115.73:5244/d/%E7%BD%91%E7%9B%98%E8%B5%84%E6%BA%90/VMware-workstation-full-17.5.2-23775571.exe?sign=H3kDu7HVdj5Ael3csoRl2oAdpegT-UrBLnGJXvnE9Gg=:0&lt;/p>
+&lt;h3 id="2安装">2.安装
+&lt;/h3>&lt;p>    这里提供一篇社区大佬做的教程：&lt;a class="link" href="https://blog.csdn.net/weixin_69052332/article/details/141745665" target="_blank" rel="noopener"
+>如何在Windows电脑上安装Linux虚拟机，以及Linux基本命令_windows安装linux虚拟机-CSDN博客&lt;/a>&lt;/p>
+&lt;p>    1.点击下一步
+    2.点击左下角的&amp;lt;接收许可&amp;gt; ，然后点击下一步
+    3.点击右上角的&amp;lt;更改&amp;gt;，点击中上白色框选择安装到的盘，新建文件夹VMware，点击确定
+    4.勾选的不重要，点击下一步
+    5.点击下一步
+    6.点击下一步
+    7.点击 安装 并等待，中间可能会出现一些异象，但是不重要
+    8.点击完成
+    9.出现弹窗 提示要重启，确认无误后重启。&lt;/p>
+&lt;h3 id="3启动vmware">3.启动VMware
+&lt;/h3>&lt;p>    打开桌面创建的快捷方式
+    如果遇到激活的问题，可以&lt;u>&lt;a class="link" href="http://47.97.115.73:5244/d/%E7%BD%91%E7%9B%98%E8%B5%84%E6%BA%90/%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%AF%86%E9%92%A5.txt?sign=z_uTeNdr3W0No-FlwxEU-13cDX70kbBh8Api0Y9jBF4=:0" target="_blank" rel="noopener"
+>前往此处&lt;/a>&lt;/u> 获取激活码&lt;/p>
+&lt;h3 id="4安装虚拟机">4.安装虚拟机
+&lt;/h3>&lt;p>    本次使用的系统是debian系统，映像文件&lt;u>&lt;a class="link" href="http://47.97.115.73:5244/d/%E7%BD%91%E7%9B%98%E8%B5%84%E6%BA%90/debian-12.7.0-amd64-netinst.iso?sign=PwAFNMKyF8dxcL1DljyOiMXzxv6Gj6HYTg2ph4HpK-k=:0" target="_blank" rel="noopener"
+>点击此处&lt;/a>&lt;/u>获取
+    1.打开VMware，点击右侧的&amp;lt;创建新的虚拟机&amp;gt;，选择&amp;lt;典型&amp;gt;，然后点击下一步
+    2.看到中间那一栏，若已自动选中则跳过这一步，直接点击下一步即可。
+            点击&amp;lt;浏览&amp;gt;，选中要安装的映像文件，点击下一步
+    3. 第一栏中，命名自己的虚拟机名字；第二栏中选择安装的位置。都配置好后点击下一步
+    4. 默认即可，点击下一步
+    5.勾选&amp;lt;创建后开启此虚拟机&amp;gt;，点击完成。&lt;/p>
+&lt;h2 id="debian">Debian
+&lt;/h2>&lt;h3 id="按如下操作走">按如下操作走：
+&lt;/h3>&lt;ol>
+&lt;li>
+&lt;p>通过↑↓键，选中graphic install，然后回车&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选择中文(简体)，点击continue&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选择中国，点击 继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选择汉语，点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>等待加载&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>命名主机名称&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>域名不管，直接回车即可&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>设置自己的管理员密码&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>命名一个非管理员账户&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>设置非管理员账户密码&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>等待加载&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选择&amp;lt;向导-使用整个磁盘&amp;gt;，点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>这里是选择的磁盘，由于是单独分出来的一块，直接点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>不用管文件分区，点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击继续即可&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选&amp;lt;是&amp;gt;，然后点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选&amp;lt;否&amp;gt;，然后点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>等待加载&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选择中国，点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>若在安徽地区，则选择&amp;lt;mirrors.ustc.edu.cn&amp;gt;这是中科大的镜像站点；若不在其周边，则选择&amp;lt;mirrors,163.com&amp;gt;这是网易的站点&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>http代理留空即可，点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>等待加载&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选择&amp;lt;否&amp;gt;，点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在软件选择界面，去掉Debian桌面环境选项，因为这是虚拟机，用桌面会很卡并造成不必要的负担，然后点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>等待加载&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>选择&amp;lt;否&amp;gt;，点击继续&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击继续，再点击继续即可&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>安装完成，点击继续&lt;/p>
+&lt;/li>
+&lt;/ol></description></item><item><title>Windows配置go语言</title><link>https://blog.suhui.us.kg/p/windows%E9%85%8D%E7%BD%AEgo%E8%AF%AD%E8%A8%80/</link><pubDate>Wed, 20 Nov 2024 18:02:40 +0000</pubDate><guid>https://blog.suhui.us.kg/p/windows%E9%85%8D%E7%BD%AEgo%E8%AF%AD%E8%A8%80/</guid><description>&lt;h1 id="windows-配置go环境">Windows 配置go环境
+&lt;/h1>&lt;h5 id="本笔记参考于csdn上一篇教程ua-hrefhttpsblogcsdnnetxuezhe5212articledetails139327521点击次处au查看原教程">本笔记参考于CSDN上一篇教程，&lt;u>&lt;a href="https://blog.csdn.net/xuezhe5212/article/details/139327521">点击次处&lt;/a>&lt;/u>查看原教程
+&lt;/h5>&lt;h2 id="1go的下载">1.go的下载
+&lt;/h2>&lt;p>官网下载：https://golang.google.cn/ &lt;u>&lt;a class="link" href="https://golang.google.cn/dl/go1.23.3.windows-amd64.msi" target="_blank" rel="noopener"
+>点击此处&lt;/a>&lt;/u>下载&lt;/p>
+&lt;p>    &lt;em>如果嫌慢的话也可以尝试下面这个&lt;/em>&lt;/p>
+&lt;p>Alist云端下载：&lt;u>&lt;a class="link" href="http://47.97.115.73:5244/%E7%BD%91%E7%9B%98%E8%B5%84%E6%BA%90/go1.23.3.windows-amd64.msi" target="_blank" rel="noopener"
+>点击此处&lt;/a>&lt;/u>跳转&lt;/p>
+&lt;h2 id="2go的安装">2.go的安装
+&lt;/h2>&lt;ol>
+&lt;li>
+&lt;p>双击.msi文件打开&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击next&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击next&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>设置自己喜欢的路径后，点击next&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击install&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>这个时候后弹出来一个窗口，询问是否安装，此时点击 是 即可&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击finish&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="3检查go的文件">3.检查go的文件
+&lt;/h2>&lt;p>    此时进入刚刚安装的go的根目录，核对以下文件&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">api
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">bin
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">doc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lib
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">misc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pkg
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">src
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">test
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">codereview.cfg
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">CONTRIBUTING.md
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">go.env
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">LICENSE
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PATENTS
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">README.md
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">SECURITY.md
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">VERSION
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>    核对后，进入bin文件夹，打开go.exe进入go编译器，若能正常运行进入下一步&lt;/p>
+&lt;h2 id="4配置go环境">4.配置go环境
+&lt;/h2>&lt;ol>
+&lt;li>
+&lt;p>在设置中找到&amp;lt;环境变量&amp;gt;(不同版本系统位置不同，紧粗略说明)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>进入&amp;lt;系统属性&amp;gt;后，点击右下角&amp;lt;环境变量&amp;gt;&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在下方的&amp;lt;系统变量&amp;gt;中找到&amp;lt;Path变量&amp;gt;，双击打开&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在列表中查看，若没有出现&amp;lt;\go\bin&amp;gt;格式的路径，则进行第五步，有则跳过&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>找到安装的go的bin文件夹，复制改路径，回到&amp;lt;编辑环境变量&amp;gt;界面，点击右上角的&amp;lt;新建&amp;gt;，粘贴路径，点击右下角&amp;lt;确定&amp;gt;即可&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="5转移文件安放位置选做">5.转移文件安放位置(选做)
+&lt;/h2>&lt;p>    若不想在go的根目录下存储代码的话，可以根据如下操作：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>在想存储代码的地方创建一个文件夹(不包含非法字符和中文)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在此文件夹中再创建3个文件夹，名称及功能如下：
+bin : 可执行文件存储位置
+pkg：生成的包文件的位置
+src : 项目的位置&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>修改环境变量：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>打开&amp;lt;环境变量&amp;gt;,找到上方的&amp;lt;用户变量&amp;gt;中的&lt;GOPATH>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>双击打开，复制之前创建的文件夹位置并粘贴替换到下面那一行的路径(变量值)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>找到&lt;GOROOT>，若无则新建一个即可，变量值为go的根目录&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>找到&lt;GOBIN>若无则创建，变量值为创建的文件夹下的bin地址&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>
+&lt;p>测试：
+在cmd下运行
+&lt;code> go run app.go&lt;/code>
+若成功运行则完成安装&lt;/p>
+&lt;/li>
+&lt;/ol></description></item><item><title>docker简单使用教程</title><link>https://blog.suhui.us.kg/p/docker%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</link><pubDate>Sun, 17 Nov 2024 17:00:00 +0000</pubDate><guid>https://blog.suhui.us.kg/p/docker%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</guid><description>&lt;h1 id="docker简略使用教程">docker简略使用教程
+&lt;/h1>&lt;h2 id="直接启动">直接启动
+&lt;/h2>&lt;h3 id="拉取镜像">拉取镜像
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">docker pull xhofe/alist:latest
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="运行容器">运行容器
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">docker run -it xhofe/alist:latest &lt;span class="c1"># 进容器 &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker run -d xhofe/alist:latest &lt;span class="c1"># 后台运行容器 &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker run -d --name&lt;span class="o">=&lt;/span>&lt;span class="nb">test&lt;/span> xhofe/alist:latest &lt;span class="c1"># 指定容器名字为 test &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker run -d --restart&lt;span class="o">=&lt;/span>unless-stopped --name&lt;span class="o">=&lt;/span>&lt;span class="nb">test&lt;/span> xhofe/alist:latest &lt;span class="c1"># 指定容器一直重启-p 5244:5244 &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker run -d -p 5244:5244 xhofe/alist:latest &lt;span class="c1"># 指定容器端口, 主机端口:容器端口 &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker run -d -v /etc/alist:/opt/alist/data -v /etc/alisttest:/opt/alist/datatest xhofe/alist:latest &lt;span class="c1"># 指定存储卷 主机路径:容器路径 &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker run -d -e &lt;span class="nv">PUID&lt;/span>&lt;span class="o">=&lt;/span>0 -e &lt;span class="nv">PGID&lt;/span>&lt;span class="o">=&lt;/span>0 -e &lt;span class="nv">UMASK&lt;/span>&lt;span class="o">=&lt;/span>022 xhofe/alist:latest &lt;span class="c1"># 添加环境变量 &lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="docker-compose启动">docker-compose启动
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">version: &amp;#39;3&amp;#39;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">services:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">    alist1:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">        image: &amp;#39;xhofe/alist:latest&amp;#39;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">        container_name: alistsdfjdskfjk
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">        volumes:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">            - &amp;#39;/etc/alist:/opt/alist/data&amp;#39;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">        ports:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">            - &amp;#39;5244:5244&amp;#39;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">        environment:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">            - PUID=0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">            - PGID=0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">            - UMASK=022
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">        restart: unless-stopped
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>进入到&lt;code>docker-compose.yaml&lt;/code>的那个目录&lt;/p>
+&lt;p>执行&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">docker-compose up -d &lt;span class="c1"># 后台运行容器编排 &lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>如果要关掉容器，执行&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">docker-compose down &lt;span class="c1"># 关掉容器编排&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>AList宝塔面板搭建,美化并挂载到阿里云盘</title><link>https://blog.suhui.us.kg/p/alist%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E7%BE%8E%E5%8C%96%E5%B9%B6%E6%8C%82%E8%BD%BD%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98/</link><pubDate>Fri, 15 Nov 2024 17:00:00 +0000</pubDate><guid>https://blog.suhui.us.kg/p/alist%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E7%BE%8E%E5%8C%96%E5%B9%B6%E6%8C%82%E8%BD%BD%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98/</guid><description>&lt;h1 id="alist在宝塔面板中的搭建本地存储及阿里云盘opne的设置">Alist在宝塔面板中的搭建，本地存储及阿里云盘Opne的设置
+&lt;/h1>&lt;h2 id="alist">Alist
+&lt;/h2>&lt;h3 id="下载-">下载 ：
+&lt;/h3>&lt;ol>
+&lt;li>使用宝塔Linux面板（详情可前往链接）中的软件商店进行傻瓜式下载（仅针宝塔面板生效的）&lt;/li>
+&lt;li>前往Alist官网获取更多详情，若想下载请移步此处&lt;/li>
+&lt;li>可使用1panel 平替宝塔面板，详情请点击此处查看安装教程，并前往软件商店进行安装&lt;/li>
+&lt;/ol>
+&lt;h3 id="1panel宝塔面板使用">1panel/宝塔面板使用
+&lt;/h3>&lt;p>在软件商店里点击alist，再点击启动即可
+Docker的可以选择端口，例如12345，而不是Alist默认的5244&lt;/p>
+&lt;h3 id="访问">访问
+&lt;/h3>&lt;p>复制&amp;lt;服务状态-alist控制台访问地址&amp;gt;中的链接打开即可,或者在所在服务器后输入端口（默认端口为：5244）&lt;/p>
+&lt;h3 id="登陆">登陆
+&lt;/h3>&lt;p>自己看&lt;/p>
+&lt;h3 id="本地存储配置">本地存储配置
+&lt;/h3>&lt;p>点击正下方&amp;lt;管理&amp;gt;，进入&amp;quot;AList管理&amp;quot;页面，点击&amp;lt;存储&amp;gt;，点击&amp;lt;添加&amp;gt;
+驱动选择&amp;lt;本机存储&amp;gt;（在蓝奏云，分秒帧之间）
+挂载路径填入&amp;lt;/&amp;ldquo;name&amp;rdquo;&amp;gt;格式（此处为网盘中显示的文件夹）
+根文件夹路径填入&amp;lt;/&amp;ldquo;RealName&amp;rdquo;&amp;gt;(此处为网盘读取的根目录，要填本地存在的文件夹)
+其余不需要进行多余操作，记得选择排序即可
+### 查看：
+点击左侧&amp;lt;主页&amp;gt;即可返回网盘主页，可以看到刚刚添加的文件夹
+需要注意的是，挂载路径填入的最后一位，会表现为顶替 根目录的头路径&lt;/p>
+&lt;h3 id="拓展">拓展：
+&lt;/h3>&lt;p>可以重复上述&amp;lt;配置存储&amp;gt;操作建立多个文件夹
+需要声明的是，每个存储只会读取一个根目录&lt;/p>
+&lt;h3 id="设置用户访问">设置用户访问：
+&lt;/h3>&lt;p>在&amp;lt;Alist管理&amp;gt;界面中，点击&amp;lt;用户&amp;gt;，点击&amp;lt;guest-编辑&amp;gt;，启用即可&lt;/p>
+&lt;h2 id="阿里云存储配置">阿里云存储配置：
+&lt;/h2>&lt;p>获取更多详细教程，请阅读官方教程
+进入Alsit管理界面，选择存储，选择添加，驱动选择`阿里云盘Open``
+需要设置的如下：&lt;/p>
+&lt;blockquote>
+&lt;p>挂载路径：&lt;/p>
+&lt;/blockquote>
+&lt;p>也就是网盘中显示的名字&lt;/p>
+&lt;h3 id="云盘类型">云盘类型
+&lt;/h3>&lt;ul>
+&lt;li>资源库：指云盘内除备份文件夹以外的文件夹&lt;/li>
+&lt;li>备份盘：指云盘内的备份文件夹&lt;/li>
+&lt;li>根文件ID：指用网址表示的文件夹代码&lt;/li>
+&lt;/ul>
+&lt;h3 id="获取方式">获取方式：
+&lt;/h3>&lt;p>通过网页进入阿里云盘，进入你要导入的文件夹，例如https://www.alipan.com/drive/file/all/25a，其中25a就是文件夹的代码（这个位置的代码即可），然后将此填入即可
+刷新令牌：
+点击此处进入获取
+操作方式：
+点击 Go to login，这时候如果已经在网页上登录了阿里云盘，则在跳转后点击允许，然后便会自动获得refreshToken，复制后填入即可&lt;/p>
+&lt;h2 id="其他">其他：
+&lt;/h2>&lt;ol>
+&lt;li>不建议启用 秒传 功能，此功能会预存储文件进服务器，会造成不必要的占用，属于是用空间换取时间&lt;/li>
+&lt;li>其余设置不重要，按喜好设置即可&lt;/li>
+&lt;li>保存后回到 主页 就能看到存储进的文件夹了&lt;/li>
+&lt;/ol>
+&lt;h2 id="alist美化">Alist美化
+&lt;/h2>&lt;p>在Alist管理界面，点击设置，点击全局，注意看到自定义头部和自定义内容&lt;/p>
+&lt;blockquote>
+&lt;p>可以去网上搜索Alist美化，然后去复制别人的
+想自制的建议去搜索CSS文件相关教程，这里提供一个参考
+下面内容中有可以参考的简化的头文件以及自定义内容，是一个渐变背景，也就是本人的网盘使用的简易背景
+配置好后记得翻到最下面 保存&lt;/p>
+&lt;/blockquote>
+&lt;p>附件：本人使用的简易头文件及自定义内容&lt;/p>
+&lt;p>头文件&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;span class="lnt">53
+&lt;/span>&lt;span class="lnt">54
+&lt;/span>&lt;span class="lnt">55
+&lt;/span>&lt;span class="lnt">56
+&lt;/span>&lt;span class="lnt">57
+&lt;/span>&lt;span class="lnt">58
+&lt;/span>&lt;span class="lnt">59
+&lt;/span>&lt;span class="lnt">60
+&lt;/span>&lt;span class="lnt">61
+&lt;/span>&lt;span class="lnt">62
+&lt;/span>&lt;span class="lnt">63
+&lt;/span>&lt;span class="lnt">64
+&lt;/span>&lt;span class="lnt">65
+&lt;/span>&lt;span class="lnt">66
+&lt;/span>&lt;span class="lnt">67
+&lt;/span>&lt;span class="lnt">68
+&lt;/span>&lt;span class="lnt">69
+&lt;/span>&lt;span class="lnt">70
+&lt;/span>&lt;span class="lnt">71
+&lt;/span>&lt;span class="lnt">72
+&lt;/span>&lt;span class="lnt">73
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">script&lt;/span> &lt;span class="n">src&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;https://polyfill.io/v3/polyfill.min.js?features=String.prototype.replaceAll&amp;#34;&lt;/span>&lt;span class="o">&amp;gt;&amp;lt;/&lt;/span>&lt;span class="n">script&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">link&lt;/span> &lt;span class="n">rel&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;stylesheet&amp;#34;&lt;/span> &lt;span class="n">href&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;https://npm.elemecdn.com/lxgw-wenkai-webfont@1.1.0/lxgwwenkai-regular.css&amp;#34;&lt;/span> &lt;span class="o">/&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">style&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">.&lt;/span>&lt;span class="n">notify&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">render&lt;/span> &lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">close&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">button&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">display&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">none&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">#canvas-basic {&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">position&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">fixed&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">display&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">block&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">width&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">100&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">height&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">100&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">top&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">right&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">bottom&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">left&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">z&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">index&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="mi">999&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">backdrop&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">filter&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">blur&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="n">px&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">!&lt;/span>&lt;span class="n">important&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">#root &amp;gt; .header {&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">background&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">rgba&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ui&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">light&lt;/span> &lt;span class="o">.&lt;/span>&lt;span class="n">body&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">.&lt;/span>&lt;span class="n">nav&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">background&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">color&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">rgba&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.2&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">border&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">radius&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="k">var&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">--&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">radii&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">xl&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ui&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">dark&lt;/span> &lt;span class="o">.&lt;/span>&lt;span class="n">body&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">.&lt;/span>&lt;span class="n">nav&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">background&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">color&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">rgb&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="mi">50&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">border&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">radius&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="k">var&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">--&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">radii&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">xl&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">.&lt;/span>&lt;span class="n">body&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">.&lt;/span>&lt;span class="n">nav&lt;/span>&lt;span class="p">::&lt;/span>&lt;span class="n">after&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">display&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">none&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">.&lt;/span>&lt;span class="n">obj&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">box&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">stack&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">dhzjXW&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">PJLV&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">PJLV&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">iigjoxS&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">background&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">color&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">rgb&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="mi">50&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">!&lt;/span>&lt;span class="n">important&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">PJLV&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">PJLV&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">iiuDLME&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">background&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">color&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">rgb&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="mi">50&lt;/span>&lt;span class="o">%&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">!&lt;/span>&lt;span class="n">important&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">.&lt;/span>&lt;span class="n">obj&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">box&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">stack&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">dhzjXW&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">PJLV&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">PJLV&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">igScBhH&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">css&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">background&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">color&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">rgba&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.2&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">!&lt;/span>&lt;span class="n">important&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">backdrop&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">filter&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">blur&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="n">px&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">!&lt;/span>&lt;span class="n">important&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">PJLV&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">PJLV&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ikSuVsl&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">background&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">color&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">rgba&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.2&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">!&lt;/span>&lt;span class="n">important&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">backdrop&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">filter&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">blur&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="n">px&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">!&lt;/span>&lt;span class="n">important&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ivMHWx&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">hZistB&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cv&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">icon&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">button&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">background&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">color&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">rgba&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.2&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">!&lt;/span>&lt;span class="n">important&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">backdrop&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">filter&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">blur&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="n">px&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">!&lt;/span>&lt;span class="n">important&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">PJLV&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ijgzmFG&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">background&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">color&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">rgba&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.2&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">!&lt;/span>&lt;span class="n">important&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">backdrop&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">filter&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">blur&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="n">px&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">!&lt;/span>&lt;span class="n">important&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ui&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">light&lt;/span> &lt;span class="n">pre&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">background&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">color&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">rgba&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">0.2&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">!&lt;/span>&lt;span class="n">important&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">backdrop&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">filter&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">blur&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="n">px&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">!&lt;/span>&lt;span class="n">important&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">.&lt;/span>&lt;span class="n">hope&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">ui&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">dark&lt;/span> &lt;span class="n">pre&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">background&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">color&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">rgba&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">!&lt;/span>&lt;span class="n">important&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">backdrop&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">filter&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">blur&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="n">px&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">!&lt;/span>&lt;span class="n">important&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">*&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">font&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">family&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">LXGW&lt;/span> &lt;span class="n">WenKai&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">*&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">font&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">weight&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="n">bold&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">body&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="n">font&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">family&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">LXGW&lt;/span> &lt;span class="n">WenKai&lt;/span>&lt;span class="p">;}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;lt;/&lt;/span>&lt;span class="n">style&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>自定义内容：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">canvas&lt;/span> &lt;span class="n">id&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;canvas-basic&amp;#34;&lt;/span>&lt;span class="o">&amp;gt;&amp;lt;/&lt;/span>&lt;span class="n">canvas&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">script&lt;/span> &lt;span class="n">src&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;https://npm.elemecdn.com/granim@2.0.0/dist/granim.min.js&amp;#34;&lt;/span>&lt;span class="o">&amp;gt;&amp;lt;/&lt;/span>&lt;span class="n">script&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">script&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">var&lt;/span> &lt;span class="n">granimInstance&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">new&lt;/span> &lt;span class="n">Granim&lt;/span>&lt;span class="p">({&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">element&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;#canvas-basic&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">direction&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s1">&amp;#39;left-right&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">isPausedWhenNotInView&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="bp">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">states&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;default-state&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">gradients&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;#a18cd1&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;#fbc2eb&amp;#39;&lt;/span>&lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;#fff1eb&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;#ace0f9&amp;#39;&lt;/span>&lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;#d4fc79&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;#96e6a1&amp;#39;&lt;/span>&lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;#a1c4fd&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;#c2e9fb&amp;#39;&lt;/span>&lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;#a8edea&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;#fed6e3&amp;#39;&lt;/span>&lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;#9890e3&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;#b1f4cf&amp;#39;&lt;/span>&lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;#a1c4fd&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;#c2e9fb&amp;#39;&lt;/span>&lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;#fff1eb&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;#ace0f9&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">});&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">&amp;lt;/&lt;/span>&lt;span class="n">script&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>AList本地存储及NATAPP内网穿透</title><link>https://blog.suhui.us.kg/p/alist%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%8F%8Anatapp%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/</link><pubDate>Tue, 12 Nov 2024 17:00:00 +0000</pubDate><guid>https://blog.suhui.us.kg/p/alist%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%8F%8Anatapp%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/</guid><description>&lt;h2 id="alist">&lt;strong>Alist&lt;/strong>
+&lt;/h2>&lt;h3 id="下载">下载：
+&lt;/h3>&lt;ol>
+&lt;li>使用宝塔Linux面板中的软件商店进行傻瓜式下载（仅针宝塔面板生效的）&lt;/li>
+&lt;li>&lt;a class="link" href="#" >下载链接&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;h3 id="使用">使用：
+&lt;/h3>&lt;p>在软件商店里点击 alist，再点击启动即可&lt;/p>
+&lt;h3 id="访问">访问：
+&lt;/h3>&lt;p>复制 &lt;code>&amp;lt;服务状态-alist控制台访问地址&amp;gt;&lt;/code> 中的链接打开即可&lt;/p>
+&lt;h3 id="登陆">登陆：
+&lt;/h3>&lt;p>自己看&lt;/p>
+&lt;h3 id="配置储存">配置储存：
+&lt;/h3>&lt;p>点击正下方 &lt;code>&amp;lt;管理&amp;gt;&lt;/code>，进入 &amp;ldquo;AList管理&amp;rdquo; 页面，点击 &lt;code>&amp;lt;存储&amp;gt;&lt;/code>，点击 &lt;code>&amp;lt;添加&amp;gt;&lt;/code>&lt;br>
+驱动选择 &lt;code>&amp;lt;本机存储&amp;gt;&lt;/code>（在蓝奏云，分秒帧之间）&lt;br>
+挂载路径填入 &lt;code>&amp;lt;/&amp;quot;name&amp;quot;&amp;gt;&lt;/code> 格式（此处为网盘中显示的文件夹）&lt;br>
+根文件夹路径填入 &lt;code>&amp;lt;/&amp;quot;RealName&amp;quot;&amp;gt;&lt;/code>（此处为网盘读取的根目录，要填本地存在的文件夹）&lt;br>
+其余不需要进行多余操作，记得选择排序即可&lt;/p>
+&lt;h3 id="查看">查看：
+&lt;/h3>&lt;p>点击左侧 &lt;code>&amp;lt;主页&amp;gt;&lt;/code> 即可返回网盘主页，可以看到刚刚添加的文件夹&lt;br>
+需要注意的是，挂载路径填入的最后一位，会表现为顶替根目录的头路径&lt;/p>
+&lt;h3 id="拓展">拓展：
+&lt;/h3>&lt;p>可以重复上述 &lt;code>&amp;lt;配置存储&amp;gt;&lt;/code> 操作建立多个文件夹&lt;br>
+需要声明的是，每个存储只会读取一个根目录&lt;/p>
+&lt;h3 id="访问-1">访问：
+&lt;/h3>&lt;p>在 &lt;code>&amp;lt;Alist管理&amp;gt;&lt;/code> 界面中，点击 &lt;code>&amp;lt;用户&amp;gt;&lt;/code>，点击 &lt;code>&amp;lt;guest-编辑&amp;gt;&lt;/code>，启用即可&lt;/p>
+&lt;hr>
+&lt;h2 id="穿透">&lt;strong>穿透&lt;/strong>
+&lt;/h2>&lt;h3 id="特别提醒不要用-httpsdocslocyanfrpcn">特别提醒：不要用 &lt;a class="link" href="https://docs.locyanfrp.cn/" target="_blank" rel="noopener"
+>https://docs.locyanfrp.cn/&lt;/a>
+&lt;/h3>&lt;p>这个网站因为片哥因为封了国内的站点，不能用了&lt;/p>
+&lt;p>这里使用 natapp 作为首选，虽然只能提供一个 http 协议隧道，但是新手可以直接用&lt;/p>
+&lt;h3 id="natapp">&lt;strong>NATAPP&lt;/strong>
+&lt;/h3>&lt;h4 id="登录">登录
+&lt;/h4>&lt;p>首先打开支付宝，然后进入 &lt;a class="link" href="https://natapp.cn" target="_blank" rel="noopener"
+>NATAPP&lt;/a>，进行登录&lt;br>
+由于未知原因无法通过常规扫码登录，所以期间需要进入支付宝进行验证&lt;/p>
+&lt;h4 id="实名认证">实名认证
+&lt;/h4>&lt;p>点击左侧 &lt;code>&amp;lt;我的账户-实名认证&amp;gt;&lt;/code> 进行认证&lt;/p>
+&lt;h4 id="购买隧道">购买隧道
+&lt;/h4>&lt;p>点击左上角 &lt;code>&amp;lt;购买隧道&amp;gt;&lt;/code>，设置名称，&lt;code>&amp;lt;隧道协议&amp;gt;&lt;/code> 选择 &lt;code>&amp;lt;http&amp;gt;&lt;/code>（或者是 Web）&lt;br>
+（其中的 UDP 和 TCP 是游戏或视频服务器使用的）&lt;br>
+然后 &lt;code>&amp;lt;本地端口&amp;gt;&lt;/code> 填入 &lt;code>&amp;lt;5244&amp;gt;&lt;/code>（也就是 AList 的端口）&lt;br>
+点击 &lt;code>&amp;lt;免费购买&amp;gt;&lt;/code>&lt;/p>
+&lt;h4 id="使用隧道">使用隧道
+&lt;/h4>&lt;p>点击 &lt;code>&amp;lt;我的隧道&amp;gt;&lt;/code>，复制 &lt;code>&amp;lt;authtoken&amp;gt;&lt;/code>&lt;br>
+进入 &lt;code>&amp;lt;宝塔Linux面板&amp;gt;&lt;/code>，并进入 &lt;code>&amp;lt;终端&amp;gt;&lt;/code>，输入以下指令&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">cd&lt;/span> //
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">cd&lt;/span> opt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo chmod a+x natapp
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">./natapp -authtoken&lt;span class="o">=&lt;/span>&amp;lt;yourAuthtokenName&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>随后终端应当进入界面，其中的 &lt;code>&amp;lt;Forwarding&amp;gt;&lt;/code> 后面紧跟的就是本次连接时分配的随机域名，格式一般为 &lt;code>http://&amp;lt;name&amp;gt;.natappfree.cc&lt;/code>&lt;/p>
+&lt;h4 id="访问-2">访问
+&lt;/h4>&lt;p>直接访问 &lt;code>http://&amp;lt;name&amp;gt;.natappfree.cc&lt;/code> 格式的网站即可访问&lt;/p></description></item><item><title>Hello World</title><link>https://blog.suhui.us.kg/p/hello-world/</link><pubDate>Sun, 05 May 2024 00:00:00 +0000</pubDate><guid>https://blog.suhui.us.kg/p/hello-world/</guid><description>&lt;img src="https://blog.suhui.us.kg/p/hello-world/cover.jpg" alt="Featured image of post Hello World" />&lt;p>Welcome to Hugo theme Stack. This is your first post. Edit or delete it, then start writing!&lt;/p>
+&lt;p>For more information about this theme, check the documentation: &lt;a class="link" href="https://stack.jimmycai.com/" target="_blank" rel="noopener"
+>https://stack.jimmycai.com/&lt;/a>&lt;/p>
+&lt;p>Want a site like this? Check out &lt;a class="link" href="https://github.com/CaiJimmy/hugo-theme-stack-starter" target="_blank" rel="noopener"
+>hugo-theme-stack-stater&lt;/a>&lt;/p>
+&lt;blockquote>
+&lt;p>Photo by &lt;a class="link" href="https://unsplash.com/@pawel_czerwinski" target="_blank" rel="noopener"
+>Pawel Czerwinski&lt;/a> on &lt;a class="link" href="https://unsplash.com/" target="_blank" rel="noopener"
+>Unsplash&lt;/a>&lt;/p>
+&lt;/blockquote></description></item></channel></rss>

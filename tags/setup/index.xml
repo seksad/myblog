@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Setup on SUHUI</title><link>https://blog.suhui.us.kg/tags/setup/</link><description>Recent content in Setup on SUHUI</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 20 Nov 2024 18:02:40 +0000</lastBuildDate><atom:link href="https://blog.suhui.us.kg/tags/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Windows配置go语言</title><link>https://blog.suhui.us.kg/p/windows%E9%85%8D%E7%BD%AEgo%E8%AF%AD%E8%A8%80/</link><pubDate>Wed, 20 Nov 2024 18:02:40 +0000</pubDate><guid>https://blog.suhui.us.kg/p/windows%E9%85%8D%E7%BD%AEgo%E8%AF%AD%E8%A8%80/</guid><description>&lt;h1 id="windows-配置go环境">Windows 配置go环境
+&lt;/h1>&lt;h5 id="本笔记参考于csdn上一篇教程ua-hrefhttpsblogcsdnnetxuezhe5212articledetails139327521点击次处au查看原教程">本笔记参考于CSDN上一篇教程，&lt;u>&lt;a href="https://blog.csdn.net/xuezhe5212/article/details/139327521">点击次处&lt;/a>&lt;/u>查看原教程
+&lt;/h5>&lt;h2 id="1go的下载">1.go的下载
+&lt;/h2>&lt;p>官网下载：https://golang.google.cn/ &lt;u>&lt;a class="link" href="https://golang.google.cn/dl/go1.23.3.windows-amd64.msi" target="_blank" rel="noopener"
+>点击此处&lt;/a>&lt;/u>下载&lt;/p>
+&lt;p>    &lt;em>如果嫌慢的话也可以尝试下面这个&lt;/em>&lt;/p>
+&lt;p>Alist云端下载：&lt;u>&lt;a class="link" href="http://47.97.115.73:5244/%E7%BD%91%E7%9B%98%E8%B5%84%E6%BA%90/go1.23.3.windows-amd64.msi" target="_blank" rel="noopener"
+>点击此处&lt;/a>&lt;/u>跳转&lt;/p>
+&lt;h2 id="2go的安装">2.go的安装
+&lt;/h2>&lt;ol>
+&lt;li>
+&lt;p>双击.msi文件打开&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击next&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击next&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>设置自己喜欢的路径后，点击next&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击install&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>这个时候后弹出来一个窗口，询问是否安装，此时点击 是 即可&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>点击finish&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="3检查go的文件">3.检查go的文件
+&lt;/h2>&lt;p>    此时进入刚刚安装的go的根目录，核对以下文件&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">api
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">bin
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">doc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">lib
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">misc
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pkg
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">src
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">test
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">codereview.cfg
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">CONTRIBUTING.md
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">go.env
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">LICENSE
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">PATENTS
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">README.md
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">SECURITY.md
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">VERSION
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>    核对后，进入bin文件夹，打开go.exe进入go编译器，若能正常运行进入下一步&lt;/p>
+&lt;h2 id="4配置go环境">4.配置go环境
+&lt;/h2>&lt;ol>
+&lt;li>
+&lt;p>在设置中找到&amp;lt;环境变量&amp;gt;(不同版本系统位置不同，紧粗略说明)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>进入&amp;lt;系统属性&amp;gt;后，点击右下角&amp;lt;环境变量&amp;gt;&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在下方的&amp;lt;系统变量&amp;gt;中找到&amp;lt;Path变量&amp;gt;，双击打开&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在列表中查看，若没有出现&amp;lt;\go\bin&amp;gt;格式的路径，则进行第五步，有则跳过&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>找到安装的go的bin文件夹，复制改路径，回到&amp;lt;编辑环境变量&amp;gt;界面，点击右上角的&amp;lt;新建&amp;gt;，粘贴路径，点击右下角&amp;lt;确定&amp;gt;即可&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="5转移文件安放位置选做">5.转移文件安放位置(选做)
+&lt;/h2>&lt;p>    若不想在go的根目录下存储代码的话，可以根据如下操作：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>在想存储代码的地方创建一个文件夹(不包含非法字符和中文)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在此文件夹中再创建3个文件夹，名称及功能如下：
+bin : 可执行文件存储位置
+pkg：生成的包文件的位置
+src : 项目的位置&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>修改环境变量：&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>打开&amp;lt;环境变量&amp;gt;,找到上方的&amp;lt;用户变量&amp;gt;中的&lt;GOPATH>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>双击打开，复制之前创建的文件夹位置并粘贴替换到下面那一行的路径(变量值)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>找到&lt;GOROOT>，若无则新建一个即可，变量值为go的根目录&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>找到&lt;GOBIN>若无则创建，变量值为创建的文件夹下的bin地址&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>
+&lt;p>测试：
+在cmd下运行
+&lt;code> go run app.go&lt;/code>
+若成功运行则完成安装&lt;/p>
+&lt;/li>
+&lt;/ol></description></item></channel></rss>
