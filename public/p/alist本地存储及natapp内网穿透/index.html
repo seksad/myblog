@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="AList本地存储及NATAPP内网穿透相关事项">
+<title>AList本地存储及NATAPP内网穿透</title>
+
+<link rel='canonical' href='http://localhost:1313/p/alist%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%8F%8Anatapp%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/'>
+
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="AList本地存储及NATAPP内网穿透">
+<meta property='og:description' content="AList本地存储及NATAPP内网穿透相关事项">
+<meta property='og:url' content='http://localhost:1313/p/alist%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%8F%8Anatapp%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/'>
+<meta property='og:site_name' content='SUHUI'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='alist' /><meta property='article:published_time' content='2024-11-12T17:00:00&#43;00:00'/><meta property='article:modified_time' content='2024-11-12T17:00:00&#43;00:00'/>
+<meta name="twitter:title" content="AList本地存储及NATAPP内网穿透">
+<meta name="twitter:description" content="AList本地存储及NATAPP内网穿透相关事项">
+    <link rel="shortcut icon" href="/favicon.jpg" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu1252645917964510570.jpg" width="300"
+                            height="254" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🫥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">SUHUI</a></h1>
+            <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/hugo-theme-stack'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/links/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#alist"><strong>Alist</strong></a>
+      <ol>
+        <li><a href="#下载">下载：</a></li>
+        <li><a href="#使用">使用：</a></li>
+        <li><a href="#访问">访问：</a></li>
+        <li><a href="#登陆">登陆：</a></li>
+        <li><a href="#配置储存">配置储存：</a></li>
+        <li><a href="#查看">查看：</a></li>
+        <li><a href="#拓展">拓展：</a></li>
+        <li><a href="#访问-1">访问：</a></li>
+      </ol>
+    </li>
+    <li><a href="#穿透"><strong>穿透</strong></a>
+      <ol>
+        <li><a href="#特别提醒不要用-httpsdocslocyanfrpcn">特别提醒：不要用 <a href="https://docs.locyanfrp.cn/">https://docs.locyanfrp.cn/</a></a></li>
+        <li><a href="#natapp"><strong>NATAPP</strong></a>
+          <ol>
+            <li><a href="#登录">登录</a></li>
+            <li><a href="#实名认证">实名认证</a></li>
+            <li><a href="#购买隧道">购买隧道</a></li>
+            <li><a href="#使用隧道">使用隧道</a></li>
+            <li><a href="#访问-2">访问</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/linux/" >
+                Linux
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/alist%E6%9C%AC%E5%9C%B0%E5%AD%98%E5%82%A8%E5%8F%8Anatapp%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/">AList本地存储及NATAPP内网穿透</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            AList本地存储及NATAPP内网穿透相关事项
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Nov 12, 2024</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 1 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="alist"><strong>Alist</strong>
+</h2><h3 id="下载">下载：
+</h3><ol>
+<li>使用宝塔Linux面板中的软件商店进行傻瓜式下载（仅针宝塔面板生效的）</li>
+<li><a class="link" href="#" >下载链接</a></li>
+</ol>
+<h3 id="使用">使用：
+</h3><p>在软件商店里点击 alist，再点击启动即可</p>
+<h3 id="访问">访问：
+</h3><p>复制 <code>&lt;服务状态-alist控制台访问地址&gt;</code> 中的链接打开即可</p>
+<h3 id="登陆">登陆：
+</h3><p>自己看</p>
+<h3 id="配置储存">配置储存：
+</h3><p>点击正下方 <code>&lt;管理&gt;</code>，进入 &ldquo;AList管理&rdquo; 页面，点击 <code>&lt;存储&gt;</code>，点击 <code>&lt;添加&gt;</code><br>
+驱动选择 <code>&lt;本机存储&gt;</code>（在蓝奏云，分秒帧之间）<br>
+挂载路径填入 <code>&lt;/&quot;name&quot;&gt;</code> 格式（此处为网盘中显示的文件夹）<br>
+根文件夹路径填入 <code>&lt;/&quot;RealName&quot;&gt;</code>（此处为网盘读取的根目录，要填本地存在的文件夹）<br>
+其余不需要进行多余操作，记得选择排序即可</p>
+<h3 id="查看">查看：
+</h3><p>点击左侧 <code>&lt;主页&gt;</code> 即可返回网盘主页，可以看到刚刚添加的文件夹<br>
+需要注意的是，挂载路径填入的最后一位，会表现为顶替根目录的头路径</p>
+<h3 id="拓展">拓展：
+</h3><p>可以重复上述 <code>&lt;配置存储&gt;</code> 操作建立多个文件夹<br>
+需要声明的是，每个存储只会读取一个根目录</p>
+<h3 id="访问-1">访问：
+</h3><p>在 <code>&lt;Alist管理&gt;</code> 界面中，点击 <code>&lt;用户&gt;</code>，点击 <code>&lt;guest-编辑&gt;</code>，启用即可</p>
+<hr>
+<h2 id="穿透"><strong>穿透</strong>
+</h2><h3 id="特别提醒不要用-httpsdocslocyanfrpcn">特别提醒：不要用 <a class="link" href="https://docs.locyanfrp.cn/"  target="_blank" rel="noopener"
+    >https://docs.locyanfrp.cn/</a>
+</h3><p>这个网站因为片哥因为封了国内的站点，不能用了</p>
+<p>这里使用 natapp 作为首选，虽然只能提供一个 http 协议隧道，但是新手可以直接用</p>
+<h3 id="natapp"><strong>NATAPP</strong>
+</h3><h4 id="登录">登录
+</h4><p>首先打开支付宝，然后进入 <a class="link" href="https://natapp.cn"  target="_blank" rel="noopener"
+    >NATAPP</a>，进行登录<br>
+由于未知原因无法通过常规扫码登录，所以期间需要进入支付宝进行验证</p>
+<h4 id="实名认证">实名认证
+</h4><p>点击左侧 <code>&lt;我的账户-实名认证&gt;</code> 进行认证</p>
+<h4 id="购买隧道">购买隧道
+</h4><p>点击左上角 <code>&lt;购买隧道&gt;</code>，设置名称，<code>&lt;隧道协议&gt;</code> 选择 <code>&lt;http&gt;</code>（或者是 Web）<br>
+（其中的 UDP 和 TCP 是游戏或视频服务器使用的）<br>
+然后 <code>&lt;本地端口&gt;</code> 填入 <code>&lt;5244&gt;</code>（也就是 AList 的端口）<br>
+点击 <code>&lt;免费购买&gt;</code></p>
+<h4 id="使用隧道">使用隧道
+</h4><p>点击 <code>&lt;我的隧道&gt;</code>，复制 <code>&lt;authtoken&gt;</code><br>
+进入 <code>&lt;宝塔Linux面板&gt;</code>，并进入 <code>&lt;终端&gt;</code>，输入以下指令</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">cd</span> //
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> opt
+</span></span><span class="line"><span class="cl">sudo chmod a+x natapp
+</span></span><span class="line"><span class="cl">./natapp -authtoken<span class="o">=</span>&lt;yourAuthtokenName&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>随后终端应当进入界面，其中的 <code>&lt;Forwarding&gt;</code> 后面紧跟的就是本次连接时分配的随机域名，格式一般为 <code>http://&lt;name&gt;.natappfree.cc</code></p>
+<h4 id="访问-2">访问
+</h4><p>直接访问 <code>http://&lt;name&gt;.natappfree.cc</code> 格式的网站即可访问</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/alist/">Alist</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    <section class="article-lastmod">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            最后更新于 Nov 12, 2024 17:00 UTC
+        </span>
+    </section></footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/alist%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BF%E6%90%AD%E5%BB%BA%E7%BE%8E%E5%8C%96%E5%B9%B6%E6%8C%82%E8%BD%BD%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AList宝塔面板搭建,美化并挂载到阿里云盘</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/grafana-prometheus%E7%AE%80%E5%8D%95%E7%9B%91%E6%8E%A7/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">grafana&#43;prometheus简单监控</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/%E6%90%AD%E5%BB%BArpg%E5%B0%8F%E6%B8%B8%E6%88%8F-browserquest/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">搭建rpg小游戏 browserquest</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/docker%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">docker简单使用教程</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2024 SUHUI
+    </section>
+    
+    <section class="powerby">
+        
+            For the time <br/>
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.29.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.17467f4e88aa3afd84f83d78a0139cd4fbcb23f591df902dd604470778d0be93.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
